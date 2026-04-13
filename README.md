@@ -99,26 +99,44 @@ docker run -d -p 9000:9000 --name portainer --restart always \
 ```
 
 ### Status Atual
-
 - ✅ Klipper instalado e configurado
 - ✅ Moonraker funcionando (porta 7125)
 - ✅ Mainsail acessível via browser
-- ⏳ **Aguardando:** Conexão física da impressora (Mini-Projeto 2)
+- ✅ **Mini-Projeto 2 COMPLETO:** Impressora conectada e funcionando no ATLAS
 
-### Próximos Passos (Mini-Projeto 2)
+### Mini-Projeto 2: Migração Física (2026-04-13 Tarde)
 
-1. Desconectar impressora Ender 3 V2 do notebook
-2. Conectar cabo USB no ATLAS
-3. Verificar device: `ls /dev/ttyUSB*`
-4. Fazer impressão de teste
-5. Reconfigurar PAD7 para IP do ATLAS
+**Hardware migrado via Hub Ugreen USB 3.0:**
+- Ender 3 V2 (Placa Creality CH341 → `/dev/ttyUSB0`)
+- BTT Eddy Probe (RP2040 → `/dev/ttyACM0` ou `/dev/ttyACM1`)
+- 2x Acelerômetros ADXL345 (RP2040)
+- Webcam Jieli Technology USB
 
+**Configurações atualizadas:**
+- `printer.cfg`: Serial atualizado para `/dev/ttyUSB0`
+- PAD7: `moonraker_host` alterado para `192.168.1.110`
+- KlipperScreen reiniciado: `sudo systemctl restart KlipperScreen`
+
+**Resultado:**
+- ✅ Impressora totalmente funcional no ATLAS
+- ✅ PAD7 exibindo interface personalizada
+- ✅ Todas as temperaturas lendo corretamente
+- ✅ Movimento e home funcionando
+
+### Unificação SSH (2026-04-13 Tarde)
+
+**Usuário `guilherme` criado em:**
+- ATLAS (já existia)
+- PAD7 (criado + grupos: sudo, tty, dialout)
+- Notebook (já existia)
+
+**SSH Config (~/.ssh/config):**
 ---
 
 📅 Histórico:
-
 - **2026-04-12:** Instalação Ubuntu Server + Docker + Portainer + Repositório GitHub
-- **2026-04-13:** Instalação Klipper + Moonraker + Mainsail via KIAUH + Backup de configurações
+- **2026-04-13 (Manhã):** Instalação Klipper + Moonraker + Mainsail via KIAUH + Backup de configurações
+- **2026-04-13 (Tarde):** Mini-Projeto 2 completo + Unificação SSH + PAD7 reconfigurado
 
 ## 🎯 Objetivo do Projeto
 
