@@ -1,0 +1,55 @@
+{
+    "dont_slow_down_outer_wall": [
+        "1"
+    ],
+    "filament_flow_ratio": [
+        "0.93"
+    ],
+    "filament_max_volumetric_speed": [
+        "16"
+    ],
+    "filament_retract_before_wipe": [
+        "0%"
+    ],
+    "filament_retraction_length": [
+        "0.5"
+    ],
+    "filament_retraction_speed": [
+        "40"
+    ],
+    "filament_settings_id": [
+        "PLA - Acabamento (0.12mm) - Ender 3 V2 Hero Me 7"
+    ],
+    "filament_wipe": [
+        "1"
+    ],
+    "filament_wipe_distance": [
+        "2"
+    ],
+    "filament_z_hop": [
+        "0.12"
+    ],
+    "filament_z_hop_types": [
+        "Spiral Lift"
+    ],
+    "from": "User",
+    "inherits": "Creality Generic PLA",
+    "is_custom_defined": "0",
+    "name": "PLA - Acabamento (0.12mm) - Ender 3 V2 Hero Me 7",
+    "nozzle_temperature": [
+        "210"
+    ],
+    "nozzle_temperature_initial_layer": [
+        "215"
+    ],
+    "nozzle_temperature_range_high": [
+        "215"
+    ],
+    "nozzle_temperature_range_low": [
+        "210"
+    ],
+    "slow_down_layer_time": [
+        "15"
+    ],
+    "version": "2.3.1.10"
+}

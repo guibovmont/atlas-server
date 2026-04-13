@@ -1,0 +1,70 @@
+{
+    "fan_cooling_layer_time": [
+        "15"
+    ],
+    "fan_max_speed": [
+        "80"
+    ],
+    "fan_min_speed": [
+        "50"
+    ],
+    "filament_end_gcode": [
+        "; filament end gcode\n"
+    ],
+    "filament_max_volumetric_speed": [
+        "8"
+    ],
+    "filament_retraction_length": [
+        "0"
+    ],
+    "filament_retraction_speed": [
+        "25"
+    ],
+    "filament_settings_id": [
+        "TPU 95A - Function (0.24mm) - Ender 3 V2 Hero Me 7"
+    ],
+    "filament_start_gcode": [
+        "; filament start gcode"
+    ],
+    "filament_type": [
+        "TPU"
+    ],
+    "filament_wipe": [
+        "0"
+    ],
+    "filament_z_hop": [
+        "0.4"
+    ],
+    "filament_z_hop_types": [
+        "Spiral Lift"
+    ],
+    "from": "User",
+    "full_fan_speed_layer": [
+        "5"
+    ],
+    "hot_plate_temp": [
+        "40"
+    ],
+    "hot_plate_temp_initial_layer": [
+        "45"
+    ],
+    "inherits": "Creality Generic PLA",
+    "is_custom_defined": "0",
+    "name": "TPU 95A - Function (0.24mm) - Ender 3 V2 Hero Me 7",
+    "nozzle_temperature": [
+        "230"
+    ],
+    "nozzle_temperature_initial_layer": [
+        "235"
+    ],
+    "nozzle_temperature_range_high": [
+        "240"
+    ],
+    "nozzle_temperature_range_low": [
+        "220"
+    ],
+    "slow_down_layer_time": [
+        "15"
+    ],
+    "version": "2.3.1.10"
+}
