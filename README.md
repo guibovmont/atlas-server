@@ -90,3 +90,67 @@ Os arquivos em `configs/orcaslicer/stealthburner/` podem ser importados diretame
 
 **Última atualização:** Abril 2026  
 **Fase do projeto:** PROMETHEUS - Fase 0
+---
+
+## 💾 Storage Externo (Orico)
+
+### Hardware
+
+- **Dock:** Orico Dual-Bay USB-C
+- **HDs:** 2x WD Purple 2TB (surveillance-grade)
+- **Interface:** USB 3.0/USB-C
+- **Capacidade total:** ~3.6 TiB (4TB decimal)
+
+### Configuração LVM
+
+O storage foi configurado como **JBOD (Linear)** usando LVM para facilitar expansão futura:
+
+```bash
+# 1. Criar Physical Volumes
+sudo pvcreate /dev/sdc1 /dev/sdd1
+
+# 2. Criar Volume Group
+sudo vgcreate storage-vg /dev/sdc1 /dev/sdd1
+
+# 3. Criar Logical Volume (usando 100% do espaço)
+sudo lvcreate -l 100%FREE -n storage-lv storage-vg
+
+# 4. Formatar com ext4
+sudo mkfs.ext4 -L storage /dev/storage-vg/storage-lv
+
+# 5. Montar
+sudo mkdir -p /mnt/storage
+sudo mount /dev/storage-vg/storage-lv /mnt/storage
+
+# 6. Adicionar ao fstab (montagem automática)
+echo '/dev/storage-vg/storage-lv /mnt/storage ext4 defaults 0 2' | sudo tee -a /etc/fstab
+```
+
+### Por que LVM?
+
+- ✅ **Expansível:** Adicionar novos HDs sem reformatar
+- ✅ **Snapshots:** Backup incremental
+- ✅ **Flexível:** Redimensionar volumes dinamicamente
+
+### Estratégia de Backup (3 camadas)
+
+**Camada 1 - Dados ativos:**
+- Orico 4TB → Nextcloud, Immich, projetos
+
+**Camada 2 - Backup local:**
+- HDD 500GB interno → Snapshots incrementais (7 dias)
+
+**Camada 3 - Backup offsite:**
+- Backblaze B2 → Backup seletivo de dados críticos
+
+### Expansão Futura
+
+Quando necessário (~3.5TB ocupados), adicionar **2 HDs extras** e migrar para RAID:
+
+```bash
+# Adicionar novos PVs ao VG existente
+sudo pvcreate /dev/sde1 /dev/sdf1
+sudo vgextend storage-vg /dev/sde1 /dev/sdf1
+sudo lvextend -l +100%FREE /dev/storage-vg/storage-lv
+sudo resize2fs /dev/storage-vg/storage-lv
+```
