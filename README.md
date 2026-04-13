@@ -73,6 +73,10 @@ docker run -d -p 9000:9000 --name portainer --restart always \
 - **Moonraker:** Instalado via KIAUH (API)
 - **Mainsail:** Instalado via KIAUH (Interface Web)
 - **Acesso Mainsail:** http://192.168.1.110
+
+### Estrutura de Diretórios
+
+\```
 ~/printer_data/
 ├── config/
 │   ├── printer.cfg (copiado do notebook Dell Inspiron)
@@ -85,6 +89,7 @@ docker run -d -p 9000:9000 --name portainer --restart always \
 ├── logs/
 ├── gcodes/
 └── comms/
+\```
 ### Grupos de Usuário
 
 ```bash
@@ -110,14 +115,10 @@ docker run -d -p 9000:9000 --name portainer --restart always \
 
 ---
 
-**Histórico de Atualizações:**
+📅 Histórico:
+
 - **2026-04-12:** Instalação Ubuntu Server + Docker + Portainer + Repositório GitHub
 - **2026-04-13:** Instalação Klipper + Moonraker + Mainsail via KIAUH + Backup de configurações
-
-## 📅 Histórico
-
-- **2026-04-12:** Instalação Ubuntu Server + Docker + Portainer
-- **Próximo:** Migração Klipper do notebook → ATLAS
 
 ## 🎯 Objetivo do Projeto
 
