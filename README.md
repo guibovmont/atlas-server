@@ -1,149 +1,92 @@
 # ATLAS Server
 
-Servidor doméstico Dell OptiPlex 3070 Micro configurado para gerenciar impressora 3D (Klipper), armazenamento em nuvem (Nextcloud), e serviços de automação.
+Servidor de produção para impressão 3D e automação residencial.
 
-## 📋 Especificações do Hardware
+## 📦 Hardware
 
-- **Modelo:** Dell OptiPlex 3070 Micro
-- **CPU:** Intel Core i5-9500T (6 cores)
+- **Máquina:** Dell OptiPlex 3070 Micro
+- **CPU:** Intel i5-9500T
 - **RAM:** 16GB DDR4
-- **Armazenamento:**
-  - SSD M.2 238GB (sistema)
-  - HDD 465GB (dados - futuro)
-- **Rede:** Ethernet Gigabit
+- **Storage:** M.2 240GB (sistema) + HDD 500GB (dados)
+- **OS:** Ubuntu 24.04 LTS
+- **IP Estático:** 192.168.1.110
 
-## 🖥️ Sistema Operacional
+## 🗂️ Estrutura do Repositório
+atlas-server/
+├── configs/
+│   ├── klipper/          # Configurações da impressora 3D
+│   │   ├── printer.cfg
+│   │   ├── moonraker.conf
+│   │   ├── KlipperScreen.conf
+│   │   ├── crowsnest.conf
+│   │   ├── timelapse.cfg
+│   │   └── acelerometros.cfg
+│   └── orcaslicer/       # Perfis de impressão
+│       ├── hero-me-7/    # Hardware anterior (histórico)
+│       │   ├── machine/
+│       │   ├── process/
+│       │   └── filament/
+│       └── stealthburner/ # Hardware atual
+│           ├── machine/
+│           ├── process/
+│           └── filament/
+## 🖨️ Configurações OrcaSlicer
 
-- **OS:** Ubuntu Server 24.04 LTS
-- **Kernel:** 6.8.0-107-generic
-- **Arquitetura:** x86_64
+### Organização por Hardware
 
-## 🌐 Configuração de Rede
+Os perfis estão separados por **hardware** (hotend), que é o componente menos mutável.
 
-- **Hostname:** atlas
-- **IP Fixo:** 192.168.1.110/24
-- **Gateway:** 192.168.1.1
-- **DNS:** 8.8.8.8, 1.1.1.1
-- **Interface:** enp1s0 (Netplan)
+### Tipos de Perfil
 
-## 🐳 Software Instalado
+- **machine/**: Configurações físicas da impressora (dimensões, limites)
+- **process/**: Parâmetros de impressão (layer height, infill, velocidade)
+- **filament/**: Configurações de material (temperatura, retração)
 
-### Docker
-- **Versão:** Docker CE (Community Edition)
-- **Instalação:** Script oficial (`get.docker.com`)
-- **Usuário:** guilherme adicionado ao grupo `docker`
+### Hero Me 7 (Histórico)
 
-### Portainer
-- **Versão:** Portainer CE (Community Edition) - latest
-- **Porta:** 9000
-- **Acesso:** http://192.168.1.110:9000
-- **Restart Policy:** always
+Hardware anterior. Mantido para **análise comparativa** futura.
 
-## 📂 Estrutura de Serviços Planejados
-ATLAS
-├── Klipper + Moonraker + Mainsail (Semana A2)
-├── Nextcloud AIO (Semana A3)
-├── Immich (Semana A4)
-├── AdGuard Home (Semana A4)
-├── Uptime Kuma (Semana A4)
-└── n8n (Semana A7)
+- **Materiais suportados:** PLA, PETG, ABS, TPU 95A
+- **Perfis:** Acabamento (0.12mm) e Function (0.24mm)
 
-## 🔧 Comandos Executados
+### StealthBurner (Atual)
 
-### Instalação do Docker
-```bash
-curl -fsSL https://get.docker.com | sh
-sudo usermod -aG docker guilherme
-```
+Hardware em uso desde 10/04/2026.
 
-### Instalação do Portainer
-```bash
-docker run -d -p 9000:9000 --name portainer --restart always \
-  -v /var/run/docker.sock:/var/run/docker.sock \
-  -v portainer_data:/data \
-  portainer/portainer-ce:latest
-```
+- **Material principal:** PETG
+- **Perfis:** Acabamento (0.12mm) e Function (0.24mm)
 
-## 🐙 Instalação do Klipper (Mini-Projeto 1 - Semana A2)
+## 🤖 Projeto OpenClaw
 
-### Software Instalado via KIAUH
+Este repositório serve como base de configurações para o **OpenClaw**, um agente IA que controlará ativamente a impressão 3D.
 
-- **KIAUH:** v6.1.0 (Klipper Installation And Update Helper)
-- **Klipper:** Instalado via KIAUH
-- **Moonraker:** Instalado via KIAUH (API)
-- **Mainsail:** Instalado via KIAUH (Interface Web)
-- **Acesso Mainsail:** http://192.168.1.110
+O OpenClaw usará esses arquivos para:
+- Auditar evolução de configurações ao longo do tempo
+- Comparar desempenho entre diferentes hardwares
+- Ajustar perfis de impressão baseado em resultados
 
-### Estrutura de Diretórios
+## 📊 Histórico de Decisões
 
-\```
-~/printer_data/
-├── config/
-│   ├── printer.cfg (copiado do notebook Dell Inspiron)
-│   ├── mainsail.cfg (link simbólico)
-│   ├── timelapse.cfg (copiado do notebook)
-│   ├── acelerometros.cfg (copiado do notebook)
-│   ├── crowsnest.conf (copiado do notebook)
-│   ├── KlipperScreen.conf (copiado do notebook)
-│   └── moonraker.conf (criado manualmente)
-├── logs/
-├── gcodes/
-└── comms/
-\```
-### Grupos de Usuário
+Consulte os **commits** do Git para entender:
+- Por que cada mudança foi feita
+- Quando cada hardware foi instalado
+- Evolução dos parâmetros de impressão
+
+## 🔧 Como Usar
+
+### Restaurar configurações Klipper
 
 ```bash
-# Usuário guilherme adicionado aos grupos:
-- tty (acesso a portas seriais)
-- dialout (comunicação USB com impressora)
+# Copiar configs pro Klipper
+cp configs/klipper/* ~/printer_data/config/
+sudo systemctl restart klipper
 ```
 
-### Status Atual
-- ✅ Klipper instalado e configurado
-- ✅ Moonraker funcionando (porta 7125)
-- ✅ Mainsail acessível via browser
-- ✅ **Mini-Projeto 2 COMPLETO:** Impressora conectada e funcionando no ATLAS
+### Importar perfis OrcaSlicer
 
-### Mini-Projeto 2: Migração Física (2026-04-13 Tarde)
-
-**Hardware migrado via Hub Ugreen USB 3.0:**
-- Ender 3 V2 (Placa Creality CH341 → `/dev/ttyUSB0`)
-- BTT Eddy Probe (RP2040 → `/dev/ttyACM0` ou `/dev/ttyACM1`)
-- 2x Acelerômetros ADXL345 (RP2040)
-- Webcam Jieli Technology USB
-
-**Configurações atualizadas:**
-- `printer.cfg`: Serial atualizado para `/dev/ttyUSB0`
-- PAD7: `moonraker_host` alterado para `192.168.1.110`
-- KlipperScreen reiniciado: `sudo systemctl restart KlipperScreen`
-
-**Resultado:**
-- ✅ Impressora totalmente funcional no ATLAS
-- ✅ PAD7 exibindo interface personalizada
-- ✅ Todas as temperaturas lendo corretamente
-- ✅ Movimento e home funcionando
-
-### Unificação SSH (2026-04-13 Tarde)
-
-**Usuário `guilherme` criado em:**
-- ATLAS (já existia)
-- PAD7 (criado + grupos: sudo, tty, dialout)
-- Notebook (já existia)
-
-**SSH Config (~/.ssh/config):**
----
-
-📅 Histórico:
-- **2026-04-12:** Instalação Ubuntu Server + Docker + Portainer + Repositório GitHub
-- **2026-04-13 (Manhã):** Instalação Klipper + Moonraker + Mainsail via KIAUH + Backup de configurações
-- **2026-04-13 (Tarde):** Mini-Projeto 2 completo + Unificação SSH + PAD7 reconfigurado
-
-## 🎯 Objetivo do Projeto
-
-Substituir o notebook Dell Inspiron (atual host do Klipper) por um servidor dedicado mais confiável, expandindo para serviços de automação residencial e substituição de Google Drive/Photos.
+Os arquivos em `configs/orcaslicer/stealthburner/` podem ser importados diretamente no OrcaSlicer.
 
 ---
 
-**Projeto:** Do Zero ao Dev Sênior - Fase 0 (ATLAS)  
-**Criador:** Guilherme Bovmont  
-**Data de Início:** Abril 2026
+**Última atualização:** Abril 2026  
+**Fase do projeto:** PROMETHEUS - Fase 0
