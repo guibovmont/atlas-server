@@ -64,6 +64,56 @@ docker run -d -p 9000:9000 --name portainer --restart always \
   portainer/portainer-ce:latest
 ```
 
+## 🐙 Instalação do Klipper (Mini-Projeto 1 - Semana A2)
+
+### Software Instalado via KIAUH
+
+- **KIAUH:** v6.1.0 (Klipper Installation And Update Helper)
+- **Klipper:** Instalado via KIAUH
+- **Moonraker:** Instalado via KIAUH (API)
+- **Mainsail:** Instalado via KIAUH (Interface Web)
+- **Acesso Mainsail:** http://192.168.1.110
+~/printer_data/
+├── config/
+│   ├── printer.cfg (copiado do notebook Dell Inspiron)
+│   ├── mainsail.cfg (link simbólico)
+│   ├── timelapse.cfg (copiado do notebook)
+│   ├── acelerometros.cfg (copiado do notebook)
+│   ├── crowsnest.conf (copiado do notebook)
+│   ├── KlipperScreen.conf (copiado do notebook)
+│   └── moonraker.conf (criado manualmente)
+├── logs/
+├── gcodes/
+└── comms/
+### Grupos de Usuário
+
+```bash
+# Usuário guilherme adicionado aos grupos:
+- tty (acesso a portas seriais)
+- dialout (comunicação USB com impressora)
+```
+
+### Status Atual
+
+- ✅ Klipper instalado e configurado
+- ✅ Moonraker funcionando (porta 7125)
+- ✅ Mainsail acessível via browser
+- ⏳ **Aguardando:** Conexão física da impressora (Mini-Projeto 2)
+
+### Próximos Passos (Mini-Projeto 2)
+
+1. Desconectar impressora Ender 3 V2 do notebook
+2. Conectar cabo USB no ATLAS
+3. Verificar device: `ls /dev/ttyUSB*`
+4. Fazer impressão de teste
+5. Reconfigurar PAD7 para IP do ATLAS
+
+---
+
+**Histórico de Atualizações:**
+- **2026-04-12:** Instalação Ubuntu Server + Docker + Portainer + Repositório GitHub
+- **2026-04-13:** Instalação Klipper + Moonraker + Mainsail via KIAUH + Backup de configurações
+
 ## 📅 Histórico
 
 - **2026-04-12:** Instalação Ubuntu Server + Docker + Portainer
