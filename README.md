@@ -1,15 +1,20 @@
-# ATLAS Server
+# 🏛️ Atlas Server
 
-Servidor de produção para impressão 3D e automação residencial.
+Repositório de documentação e configurações do servidor principal (OptiPlex 3070) para automação, Docker e Klipper.
 
-## 📦 Hardware
+## 🛠️ Especificações Técnicas
 
+### Hardware
 - **Máquina:** Dell OptiPlex 3070 Micro
-- **CPU:** Intel i5-9500T
+- **CPU:** Intel i5-9500T (6 Cores / 6 Threads)
 - **RAM:** 16GB DDR4
-- **Storage:** M.2 240GB (sistema) + HDD 500GB (dados)
-- **OS:** Ubuntu 24.04 LTS
-- **IP Estático:** 192.168.1.110
+- **Storage Interno:** M.2 240GB (OS) + HDD 500GB (Data)
+- **IP Estático:** `192.168.1.110`
+
+### Software & Localização
+- **OS:** Ubuntu 24.04.4 LTS
+- **Hostname:** `Atlas`
+- **Timezone:** `America/Sao_Paulo` (UTC-3)
 
 ## 🗂️ Estrutura do Repositório
 atlas-server/
@@ -30,6 +35,7 @@ atlas-server/
 │           ├── machine/
 │           ├── process/
 │           └── filament/
+
 ## 🖨️ Configurações OrcaSlicer
 
 ### Organização por Hardware
@@ -144,7 +150,6 @@ echo '/dev/storage-vg/storage-lv /mnt/storage ext4 defaults 0 2' | sudo tee -a /
 - Backblaze B2 → Backup seletivo de dados críticos
 
 ### Expansão Futura
-
 Quando necessário (~3.5TB ocupados), adicionar **2 HDs extras** e migrar para RAID:
 
 ```bash
