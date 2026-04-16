@@ -16,25 +16,67 @@ Repositório de documentação e configurações do servidor principal (OptiPlex
 - **Hostname:** `Atlas`
 - **Timezone:** `America/Sao_Paulo` (UTC-3)
 
+---
+
 ## 🗂️ Estrutura do Repositório
+
+```
 atlas-server/
 ├── configs/
-│   ├── klipper/          # Configurações da impressora 3D
+│   ├── klipper/              # Configurações da impressora 3D
 │   │   ├── printer.cfg
 │   │   ├── moonraker.conf
 │   │   ├── KlipperScreen.conf
 │   │   ├── crowsnest.conf
 │   │   ├── timelapse.cfg
 │   │   └── acelerometros.cfg
-│   └── orcaslicer/       # Perfis de impressão
-│       ├── hero-me-7/    # Hardware anterior (histórico)
+│   └── orcaslicer/           # Perfis de impressão
+│       ├── hero-me-7/        # Hardware anterior (histórico)
 │       │   ├── machine/
 │       │   ├── process/
 │       │   └── filament/
-│       └── stealthburner/ # Hardware atual
+│       └── stealthburner/    # Hardware atual
 │           ├── machine/
 │           ├── process/
 │           └── filament/
+```
+
+---
+
+## 🖨️ Configurações Klipper
+
+### Webcam (Crowsnest)
+
+**Status:** ✅ Configurado e funcionando (15/04/2026)
+
+**Configuração:**
+- **Device:** `/dev/video0` (Jieli USB Composite)
+- **Resolução:** 1280x720 (HD nativo)
+- **FPS:** 30
+- **Encoder:** Hardware (GPU Intel)
+- **Porta:** 8080
+- **URL Stream:** `http://192.168.1.110:8080/?action=stream`
+
+**Notas:**
+- Device corrigido de `/dev/video2` para `/dev/video0` durante migração servidor
+- Hardware encoding (`--encoder=HW`) ativado para melhor performance
+- Flag `--host 0.0.0.0` adicionada para permitir acesso via rede
+
+### Printer.cfg
+
+**Última atualização:** 15/04/2026
+
+**Mudanças recentes:**
+- ⚙️ Ajuste altura stepper Z devido à instalação de cable chain na toolhead
+- 🔧 Reorganização de cabos otimizada para StealthBurner
+
+**Hardware atual:**
+- **Toolhead:** StealthBurner
+- **Probe:** BTT Eddy
+- **Acelerômetros:** RP2040 (2 unidades)
+- **Extrusora:** Orbiter 2.0
+
+---
 
 ## 🖨️ Configurações OrcaSlicer
 
@@ -62,46 +104,11 @@ Hardware em uso desde 10/04/2026.
 - **Material principal:** PETG
 - **Perfis:** Acabamento (0.12mm) e Function (0.24mm)
 
-## 🤖 Projeto OpenClaw
-
-Este repositório serve como base de configurações para o **OpenClaw**, um agente IA que controlará ativamente a impressão 3D.
-
-O OpenClaw usará esses arquivos para:
-- Auditar evolução de configurações ao longo do tempo
-- Comparar desempenho entre diferentes hardwares
-- Ajustar perfis de impressão baseado em resultados
-
-## 📊 Histórico de Decisões
-
-Consulte os **commits** do Git para entender:
-- Por que cada mudança foi feita
-- Quando cada hardware foi instalado
-- Evolução dos parâmetros de impressão
-
-## 🔧 Como Usar
-
-### Restaurar configurações Klipper
-
-```bash
-# Copiar configs pro Klipper
-cp configs/klipper/* ~/printer_data/config/
-sudo systemctl restart klipper
-```
-
-### Importar perfis OrcaSlicer
-
-Os arquivos em `configs/orcaslicer/stealthburner/` podem ser importados diretamente no OrcaSlicer.
-
----
-
-**Última atualização:** Abril 2026  
-**Fase do projeto:** PROMETHEUS - Fase 0
 ---
 
 ## 💾 Storage Externo (Orico)
 
 ### Hardware
-
 - **Dock:** Orico Dual-Bay USB-C
 - **HDs:** 2x WD Purple 2TB (surveillance-grade)
 - **Interface:** USB 3.0/USB-C
@@ -138,7 +145,76 @@ echo '/dev/storage-vg/storage-lv /mnt/storage ext4 defaults 0 2' | sudo tee -a /
 - ✅ **Snapshots:** Backup incremental
 - ✅ **Flexível:** Redimensionar volumes dinamicamente
 
-### Estratégia de Backup (3 camadas)
+### Por que JBOD em vez de RAID 1?
+
+- ✅ **Capacidade total:** 3.6TB utilizáveis (vs 2TB em RAID 1)
+- ✅ **Backup 3-2-1:** Risco mitigado com estratégia de backup robusta
+- ⚠️ **Sem redundância:** Se um disco falhar, perde tudo (dependência do backup)
+
+---
+
+## 🌐 Compartilhamento de Rede (Samba)
+
+**Status:** ✅ Configurado e funcionando (15/04/2026)
+
+### Configuração
+
+**Compartilhamento:**
+- **Nome:** `storage`
+- **Path:** `/mnt/storage`
+- **Protocolo:** SMB/CIFS (Samba)
+- **Acesso:** `\\192.168.1.110\storage`
+
+**Segurança (3 camadas):**
+1. **Autenticação:** Usuário `guilherme` + senha obrigatória
+2. **Restrição IP:** Somente `192.168.1.21` (KRONOS) permitido
+3. **Permissões Linux:** `0775` (dono/grupo escrevem, outros só leem)
+
+### Acesso do Windows (KRONOS)
+
+```cmd
+# Mapear drive S: permanente
+net use S: \\192.168.1.110\storage /user:guilherme /persistent:yes
+```
+
+### Configuração Samba (`/etc/samba/smb.conf`)
+
+```ini
+[storage]
+   path = /mnt/storage
+   browseable = yes
+   read only = no
+   valid users = guilherme
+   hosts allow = 192.168.1.21
+   hosts deny = 0.0.0.0/0
+   create mask = 0775
+   directory mask = 0775
+```
+
+**Adicionar novos IPs à lista VIP:**
+```ini
+hosts allow = 192.168.1.21 192.168.1.50 192.168.1.100
+```
+
+### Comandos Úteis
+
+```bash
+# Testar configuração Samba
+sudo testparm -s
+
+# Reiniciar serviço
+sudo systemctl restart smbd
+
+# Verificar status
+systemctl status smbd
+
+# Criar/alterar senha usuário Samba
+sudo smbpasswd -a guilherme
+```
+
+---
+
+## 🔐 Estratégia de Backup (3 camadas)
 
 **Camada 1 - Dados ativos:**
 - Orico 4TB → Nextcloud, Immich, projetos
@@ -149,8 +225,11 @@ echo '/dev/storage-vg/storage-lv /mnt/storage ext4 defaults 0 2' | sudo tee -a /
 **Camada 3 - Backup offsite:**
 - Backblaze B2 → Backup seletivo de dados críticos
 
-### Expansão Futura
-Quando necessário (~3.5TB ocupados), adicionar **2 HDs extras** e migrar para RAID:
+---
+
+## 🚀 Expansão Futura
+
+Quando necessário (~3.5TB ocupados), adicionar **2 HDs extras** ao LVM:
 
 ```bash
 # Adicionar novos PVs ao VG existente
@@ -159,3 +238,46 @@ sudo vgextend storage-vg /dev/sde1 /dev/sdf1
 sudo lvextend -l +100%FREE /dev/storage-vg/storage-lv
 sudo resize2fs /dev/storage-vg/storage-lv
 ```
+
+---
+
+## 🤖 Projeto OpenClaw
+
+Este repositório serve como base de configurações para o **OpenClaw**, um agente IA que controlará ativamente a impressão 3D.
+
+O OpenClaw usará esses arquivos para:
+
+- Auditar evolução de configurações ao longo do tempo
+- Comparar desempenho entre diferentes hardwares
+- Ajustar perfis de impressão baseado em resultados
+
+---
+
+## 📊 Histórico de Decisões
+
+Consulte os **commits** do Git para entender:
+
+- Por que cada mudança foi feita
+- Quando cada hardware foi instalado
+- Evolução dos parâmetros de impressão
+
+---
+
+## 🔧 Como Usar
+
+### Restaurar configurações Klipper
+
+```bash
+# Copiar configs pro Klipper
+cp configs/klipper/* ~/printer_data/config/
+sudo systemctl restart klipper
+```
+
+### Importar perfis OrcaSlicer
+
+Os arquivos em `configs/orcaslicer/stealthburner/` podem ser importados diretamente no OrcaSlicer.
+
+---
+
+**Última atualização:** 15/04/2026  
+**Fase do projeto:** PROMETHEUS - Fase 0
