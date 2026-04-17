@@ -2,48 +2,64 @@
 
 Repositório de documentação e configurações do servidor principal (OptiPlex 3070) para automação, Docker e Klipper.
 
-## 🛠️ Especificações Técnicas
-
-### Hardware
-- **Máquina:** Dell OptiPlex 3070 Micro
-- **CPU:** Intel i5-9500T (6 Cores / 6 Threads)
-- **RAM:** 16GB DDR4
-- **Storage Interno:** M.2 240GB (OS) + HDD 500GB (Data)
-- **IP Estático:** `192.168.1.110`
-
-### Software & Localização
-- **OS:** Ubuntu 24.04.4 LTS
-- **Hostname:** `Atlas`
-- **Timezone:** `America/Sao_Paulo` (UTC-3)
-
 ---
 
-## 🗂️ Estrutura do Repositório
+## 🔥 PHOENIX - Impressora 3D
 
-```
-atlas-server/
-├── configs/
-│   ├── klipper/              # Configurações da impressora 3D
-│   │   ├── printer.cfg
-│   │   ├── moonraker.conf
-│   │   ├── KlipperScreen.conf
-│   │   ├── crowsnest.conf
-│   │   ├── timelapse.cfg
-│   │   └── acelerometros.cfg
-│   └── orcaslicer/           # Perfis de impressão
-│       ├── hero-me-7/        # Hardware anterior (histórico)
-│       │   ├── machine/
-│       │   ├── process/
-│       │   └── filament/
-│       └── stealthburner/    # Hardware atual
-│           ├── machine/
-│           ├── process/
-│           └── filament/
-```
+**PHOENIX** é uma impressora em constante evolução, renascendo das cinzas a cada upgrade.
+
+### ⚙️ Configuração Hero Me Gen 7 (anterior)
+
+**Base:** Creality Ender 3 V2 Neo  
+**Toolhead:** Hero Me Gen 7  
+**Extrusora:** Sprite SE Direct Drive  
+**Hotend:** MK8 original  
+**Cooling:**
+- Fan peça: 5015
+- Fan hotend: 4020
+
+### ⚙️ Configuração Stealthburner (atual - 16/ABR/2026)
+
+**Toolhead:** Stealthburner  
+**Hotend:** MK8 original  
+**Cooling:**
+- Fan frontal: 4010 (original Ender 3 V2 Neo)
+- Fan lateral: 5015 (part cooling)
+
+**Sensores:**
+- Z-Probe: BTT Eddy (indutivo, sem contato)
+- Filamento: BTT SFS (switch PA4 + motion PB0)
+- Acelerômetros: Dual RP2040 LIS2DW (X toolhead, Y mesa)
+
+**Mecânica:**
+- Dual Z, fuso lubrificado
+- Área: 220×220×145mm (altura reduzida por cable chain)
+- Cama: manta isolante + molas reforçadas
+
+**Stack:**
+- Firmware: Klipper v0.13
+- Servidor: ATLAS (OptiPlex 3070 Micro)
+- Interface: Mainsail + KlipperScreen (BTT Pad 7)
 
 ---
 
 ## 🖨️ Configurações Klipper
+
+### Printer.cfg
+
+**Última atualização:** 16/04/2026
+
+**Mudanças recentes:**
+- 🔥 Sensor de filamento BTT SFS instalado (switch + motion)
+- ⚙️ Ajuste altura stepper Z devido à cable chain na toolhead
+- 🔧 Atualização input shaper (X: 40.6Hz, Y: 38.6Hz)
+
+**Hardware atual:**
+- **Toolhead:** Stealthburner
+- **Probe:** BTT Eddy
+- **Acelerômetros:** RP2040 (2 unidades)
+- **Extrusora:** Orbiter 2.0
+- **Sensor filamento:** BTT SFS
 
 ### Webcam (Crowsnest)
 
@@ -62,42 +78,26 @@ atlas-server/
 - Hardware encoding (`--encoder=HW`) ativado para melhor performance
 - Flag `--host 0.0.0.0` adicionada para permitir acesso via rede
 
-### Printer.cfg
+### 🎨 Configurações OrcaSlicer
 
-**Última atualização:** 15/04/2026
-
-**Mudanças recentes:**
-- ⚙️ Ajuste altura stepper Z devido à instalação de cable chain na toolhead
-- 🔧 Reorganização de cabos otimizada para StealthBurner
-
-**Hardware atual:**
-- **Toolhead:** StealthBurner
-- **Probe:** BTT Eddy
-- **Acelerômetros:** RP2040 (2 unidades)
-- **Extrusora:** Orbiter 2.0
-
----
-
-## 🖨️ Configurações OrcaSlicer
-
-### Organização por Hardware
+#### Organização por Hardware
 
 Os perfis estão separados por **hardware** (hotend), que é o componente menos mutável.
 
-### Tipos de Perfil
+#### Tipos de Perfil
 
 - **machine/**: Configurações físicas da impressora (dimensões, limites)
 - **process/**: Parâmetros de impressão (layer height, infill, velocidade)
 - **filament/**: Configurações de material (temperatura, retração)
 
-### Hero Me 7 (Histórico)
+#### Hero Me 7 (Histórico)
 
 Hardware anterior. Mantido para **análise comparativa** futura.
 
 - **Materiais suportados:** PLA, PETG, ABS, TPU 95A
 - **Perfis:** Acabamento (0.12mm) e Function (0.24mm)
 
-### StealthBurner (Atual)
+#### StealthBurner (Atual)
 
 Hardware em uso desde 10/04/2026.
 
@@ -106,15 +106,34 @@ Hardware em uso desde 10/04/2026.
 
 ---
 
-## 💾 Storage Externo (Orico)
+## 🖥️ ATLAS - Servidor
 
-### Hardware
+### 🛠️ Especificações Técnicas
+
+**Hardware:**
+- **Máquina:** Dell OptiPlex 3070 Micro
+- **CPU:** Intel i5-9500T (6 Cores / 6 Threads)
+- **RAM:** 16GB DDR4
+- **Storage Interno:** M.2 240GB (OS) + HDD 500GB (Data)
+- **IP Estático:** `192.168.1.110`
+
+**Software & Localização:**
+- **OS:** Ubuntu 24.04.4 LTS
+- **Hostname:** `Atlas`
+- **Timezone:** `America/Sao_Paulo` (UTC-3)
+
+---
+
+### 💾 Storage & Backup
+
+#### Hardware Externo (Orico)
+
 - **Dock:** Orico Dual-Bay USB-C
 - **HDs:** 2x WD Purple 2TB (surveillance-grade)
 - **Interface:** USB 3.0/USB-C
 - **Capacidade total:** ~3.6 TiB (4TB decimal)
 
-### Configuração LVM
+#### Configuração LVM
 
 O storage foi configurado como **JBOD (Linear)** usando LVM para facilitar expansão futura:
 
@@ -139,25 +158,19 @@ sudo mount /dev/storage-vg/storage-lv /mnt/storage
 echo '/dev/storage-vg/storage-lv /mnt/storage ext4 defaults 0 2' | sudo tee -a /etc/fstab
 ```
 
-### Por que LVM?
-
+**Por que LVM?**
 - ✅ **Expansível:** Adicionar novos HDs sem reformatar
 - ✅ **Snapshots:** Backup incremental
 - ✅ **Flexível:** Redimensionar volumes dinamicamente
 
-### Por que JBOD em vez de RAID 1?
-
+**Por que JBOD em vez de RAID 1?**
 - ✅ **Capacidade total:** 3.6TB utilizáveis (vs 2TB em RAID 1)
 - ✅ **Backup 3-2-1:** Risco mitigado com estratégia de backup robusta
 - ⚠️ **Sem redundância:** Se um disco falhar, perde tudo (dependência do backup)
 
----
-
-## 🌐 Compartilhamento de Rede (Samba)
+#### Compartilhamento de Rede (Samba)
 
 **Status:** ✅ Configurado e funcionando (15/04/2026)
-
-### Configuração
 
 **Compartilhamento:**
 - **Nome:** `storage`
@@ -170,15 +183,12 @@ echo '/dev/storage-vg/storage-lv /mnt/storage ext4 defaults 0 2' | sudo tee -a /
 2. **Restrição IP:** Somente `192.168.1.21` (KRONOS) permitido
 3. **Permissões Linux:** `0775` (dono/grupo escrevem, outros só leem)
 
-### Acesso do Windows (KRONOS)
-
+**Acesso do Windows (KRONOS):**
 ```cmd
-# Mapear drive S: permanente
 net use S: \\192.168.1.110\storage /user:guilherme /persistent:yes
 ```
 
-### Configuração Samba (`/etc/samba/smb.conf`)
-
+**Configuração Samba (`/etc/samba/smb.conf`):**
 ```ini
 [storage]
    path = /mnt/storage
@@ -191,13 +201,7 @@ net use S: \\192.168.1.110\storage /user:guilherme /persistent:yes
    directory mask = 0775
 ```
 
-**Adicionar novos IPs à lista VIP:**
-```ini
-hosts allow = 192.168.1.21 192.168.1.50 192.168.1.100
-```
-
-### Comandos Úteis
-
+**Comandos Úteis:**
 ```bash
 # Testar configuração Samba
 sudo testparm -s
@@ -207,27 +211,21 @@ sudo systemctl restart smbd
 
 # Verificar status
 systemctl status smbd
-
-# Criar/alterar senha usuário Samba
-sudo smbpasswd -a guilherme
 ```
 
----
-
-## 🔐 Estratégia de Backup (3 camadas)
+#### Estratégia de Backup (3 camadas)
 
 **Camada 1 - Dados ativos:**
-- Orico 4TB → Nextcloud, Immich, projetos
+- `/mnt/storage` (3.6TB) → Nextcloud, Immich, projetos
 
-**Camada 2 - Backup local:**
-- HDD 500GB interno → Snapshots incrementais (7 dias)
+**Camada 2 - Lixeira local:**
+- Nextcloud trash (30 dias retenção) → Recovery rápido
 
 **Camada 3 - Backup offsite:**
-- Backblaze B2 → Backup seletivo de dados críticos
+- AWS Glacier Deep Archive ($4/mês) → Backup completo 4TB
+- Google Drive 100GB grátis → Backup seletivo (críticos)
 
----
-
-## 🚀 Expansão Futura
+#### Expansão Futura
 
 Quando necessário (~3.5TB ocupados), adicionar **2 HDs extras** ao LVM:
 
@@ -238,6 +236,28 @@ sudo vgextend storage-vg /dev/sde1 /dev/sdf1
 sudo lvextend -l +100%FREE /dev/storage-vg/storage-lv
 sudo resize2fs /dev/storage-vg/storage-lv
 ```
+
+---
+
+## 🗂️ Estrutura do Repositório
+atlas-server/
+├── configs/
+│   ├── klipper/              # Configurações da impressora 3D
+│   │   ├── printer.cfg
+│   │   ├── moonraker.conf
+│   │   ├── KlipperScreen.conf
+│   │   ├── crowsnest.conf
+│   │   ├── timelapse.cfg
+│   │   └── acelerometros.cfg
+│   └── orcaslicer/           # Perfis de impressão
+│       ├── hero-me-7/        # Hardware anterior (histórico)
+│       │   ├── machine/
+│       │   ├── process/
+│       │   └── filament/
+│       └── stealthburner/    # Hardware atual
+│           ├── machine/
+│           ├── process/
+│           └── filament/
 
 ---
 
@@ -279,5 +299,5 @@ Os arquivos em `configs/orcaslicer/stealthburner/` podem ser importados diretame
 
 ---
 
-**Última atualização:** 15/04/2026  
+**Última atualização:** 16/04/2026  
 **Fase do projeto:** PROMETHEUS - Fase 0
