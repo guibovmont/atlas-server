@@ -1,0 +1,43 @@
+[server]
+host: 0.0.0.0
+port: 7125
+klippy_uds_address: /home/SEU_USUARIO/printer_data/comms/klippy.sock
+
+[authorization]
+trusted_clients:
+    SEU_IP_LOCAL/24
+    100.0.0.0/8
+    127.0.0.1
+cors_domains:
+    SEU_IP_LOCAL
+    SEU_IP_TAILSCALE
+    *.lan
+    *.local
+    *://localhost
+    *://localhost:*
+    *://my.mainsail.xyz
+    *://app.fluidd.xyz
+
+[octoprint_compat]
+
+[history]
+
+[file_manager]
+enable_object_processing: True
+
+[announcements]
+subscriptions:
+    mainsail
+
+# Crowsnest update_manager entry
+[update_manager crowsnest]
+type: git_repo
+path: ~/crowsnest
+origin: https://github.com/mainsail-crew/crowsnest.git
+managed_services: crowsnest
+install_script: tools/pkglist.sh
+
+[timelapse]
+output_path: ~/printer_data/timelapse/
+frame_path: /tmp/timelapse/printer
+ffmpeg_binary_path: /usr/bin/ffmpeg

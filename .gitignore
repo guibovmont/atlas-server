@@ -1,0 +1,6 @@
+# Backups automáticos do Klipper
+*.backup
+printer-*.cfg
+
+# Arquivo com IPs e dados locais — usar moonraker.conf.example no lugar
+configs/klipper/moonraker.conf
